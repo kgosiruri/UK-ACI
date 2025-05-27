@@ -29,3 +29,6 @@ haversine
 pyproj
 xlrd
 openpyxl
+jupyterthemes
+cartopy
+pennylane
