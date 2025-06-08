@@ -1,13 +1,12 @@
 \documentclass[12pt,a4paper]{report}
-
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
-\geometry{a4paper, margin=0.7in}
+\geometry{a4paper, margin=0.5in}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{setspace}
-\usepackage{natbib}
+\usepackage[round]{natbib}
 \usepackage{array}
 \usepackage{float}
 
@@ -54,7 +53,6 @@ The primary objective of this report is to develop an Actuarial Climate Index ta
 \section{Structure of the Report}
 This report is organized as follows:
 \begin{itemize}
-    \item \textbf{Chapter 2: Literature Review} --- Summarizes existing research on climate indices and their actuarial applications.
     \item \textbf{Chapter 3: Methodology} --- Details the data sources, preprocessing steps, and statistical methods used to construct the ACI.
     \item \textbf{Chapter 4: Results} --- Presents the findings from the analysis, including the constructed index and its interpretation.
     \item \textbf{Chapter 5: Discussion} --- Discusses the implications of the results for actuarial practice, as well as limitations of the current approach.
@@ -62,16 +60,6 @@ This report is organized as follows:
     \item \textbf{Appendix} --- Contains supplementary material, data, or code relevant to the study.
 \end{itemize}
 
-\chapter{Literature Review}
-\section{Relevant Studies}
-Several studies have explored the development and application of climate indices for risk assessment. \citet{brooks2014actuarial} introduced the Actuarial Climate Index (ACI) for North America, providing a framework for quantifying climate-related risks relevant to the insurance industry. Their methodology combines multiple climate variables, such as temperature extremes, precipitation, and wind speed, to create a composite index.
-
-\citet{zwiers2011climate} examined the relationship between climate variability and insurance losses, highlighting the importance of robust indices for actuarial applications. Similarly, \citet{alexander2006global} conducted a global analysis of climate extremes, offering insights into trends and variability that inform index construction.
-
-In the UK context, \citet{kendon2014uk} analyzed changes in UK rainfall and temperature extremes, providing a foundation for region-specific climate indices. The work of \citet{palin2016future} further assessed future projections of extreme weather events in the UK, emphasizing the need for dynamic risk assessment tools.
-
-These studies collectively inform the methodology and relevance of constructing an Actuarial Climate Index tailored for the UK.
-\section{Gaps in the Literature}
 
 \chapter{Methodology}
 
@@ -79,7 +67,7 @@ These studies collectively inform the methodology and relevance of constructing 
 This study adopts a quantitative approach to construct and analyze an Actuarial Climate Index (ACI) for the UK, integrating statistical and machine learning techniques to process climate data and assess its relevance for actuarial risk.
 
 \section{Data Collection}
-Annual climate data for the UK from 1999 to 2023 is utilized, comprising ten variables found in Table~\ref{tab:climate_factors}. Data is sourced from reputable meteorological agencies to ensure accuracy and reliability.
+Annual climate data for the UK from 1999 to 2023 is utilized, comprising ten variables found in Table  Data is sourced from reputable meteorological agencies to ensure accuracy and reliability.
 
 \begin{table}[H]
 \centering
@@ -107,12 +95,15 @@ Precipitation Extremes & $PR_{ext}$ & days & Number of days with extreme precipi
 \end{table}
 
 \section{Data Preprocessing}
-Each climate variable is transformed into a \textbf{standardized anomaly} to ensure comparability across different units and scales. This involves subtracting the long-term mean and dividing by the standard deviation for each variable over the study period. The resulting standardized anomalies have zero mean and unit variance, facilitating unbiased multivariate analysis.
+Each climate variable is transformed into a \textbf{standardized anomaly} to ensure comparability across different units and scales. 
+This involves subtracting the long-term mean and dividing by the standard deviation for each variable over the study period. 
+The resulting standardized anomalies have zero mean and unit variance, facilitating unbiased multivariate analysis.
 
 \section{Data Analysis}
 
 \subsection{Principal Component Analysis (PCA)}
-Principal Component Analysis (PCA) is applied to the matrix of standardized anomalies to reduce dimensionality and identify dominant modes of interannual climate variability. PCA projects the original correlated variables onto new orthogonal axes (principal components) that sequentially maximize explained variance.
+Principal Component Analysis (PCA) is applied to the matrix of standardized anomalies to reduce dimensionality and identify dominant modes of interannual climate variability. 
+PCA projects the original correlated variables onto new orthogonal axes (principal components) that sequentially maximize explained variance.
 
 Mathematically, PCA decomposes the covariance matrix \( \mathbf{C} \) of the standardized anomaly data as:
 \[
@@ -120,7 +111,9 @@ Mathematically, PCA decomposes the covariance matrix \( \mathbf{C} \) of the sta
 \]
 where \( \mathbf{V} \) is the matrix of eigenvectors (loadings), and \( \mathbf{\Lambda} \) is the diagonal matrix of eigenvalues representing the variance explained by each principal component.
 
-The first \(k\) principal components (PCs) are selected such that they collectively explain approximately 80\% of the total variability in the standardized climate anomaly data. This approach preserves the majority of the multivariate climate information while reducing dimensionality, enabling efficient and robust forecasting. Formally, the Anomaly Climate Index at time \(t\) can be reconstructed as
+The first \(k\) principal components (PCs) are selected such that they collectively explain approximately 80\% of the total variability in the standardized climate anomaly data. 
+This approach preserves the majority of the multivariate climate information while reducing dimensionality, enabling efficient and robust forecasting. 
+Formally, the Anomaly Climate Index at time \(t\) can be reconstructed as
 \[
 \hat{\mathbf{Z}}_t = \sum_{i=1}^k \mathbf{v}_i \, PC_i(t),
 \]
@@ -129,59 +122,65 @@ where \(\mathbf{v}_i\) is the loading vector for the \(i\)-th principal componen
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{pca_explained_variance_report.png}
-    \caption{Explained variance ratio of each principal component from PCA applied to standardized UK climate anomalies (1999--2023). The first few components capture the majority of the variance, justifying dimensionality reduction for index construction.}
+    \caption{Explained variance ratio of each principal component from PCA applied to standardized UK climate anomalies (1999--2023). 
+    The first few components capture the majority of the variance, justifying dimensionality reduction for index construction.}
     \label{fig:pca_explained_variance}
 \end{figure}
 \subsection{Interpretation and Validation}
-The loadings of the selected PCs provide insight into which climate variables most strongly influence the index, offering interpretability crucial for actuarial applications. Sensitivity analyses are conducted by performing PCA on sub-periods to evaluate the stability of loadings and explained variance. 
+The loadings of the selected PCs provide insight into which climate variables most strongly influence the index, offering interpretability crucial for actuarial applications. 
+Sensitivity analyses are conducted by performing PCA on sub-periods to evaluate the stability of loadings and explained variance. 
 Additionally, bootstrapping methods generate confidence intervals for the loadings and principal components, quantifying uncertainty inherent in the index construction.
 
-\subsection{Forecasting with Quantum Kernel Long Short-Term Memory (QK-LSTM) Networks}
-To forecast future values of the ACI represented by multiple principal components, a hybrid Quantum Kernel and Long Short-Term Memory (QK-LSTM) neural network is employed. 
-This advanced architecture integrates quantum kernel methods with classical LSTM networks to enhance the modeling of complex temporal dependencies and nonlinear relationships in climate data \citep{schuld2019quantum, li2022quantum}.
+We finally obtain the first principal component (PC1) as the primary Anomaly Climate Index (ACI), 
+which serves as a multivariate indicator of climate anomalies relevant for actuarial risk assessment.
 
-Quantum kernels project classical input data into high-dimensional Hilbert spaces using parameterized quantum circuits, capturing intricate nonlinearities that classical kernels may not detect. The quantum kernel between two inputs \(x\) and \(x'\) is given by
-\[
-K(x, x') = |\langle \psi(x) | \psi(x') \rangle|^2,
-\]
-where \(\psi(\cdot)\) denotes the quantum feature embedding.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{pc1_ts.png}
+    \caption{First Principal Component (PC1) of the Anomaly Climate Index (ACI) for the UK, derived from PCA on standardized climate anomalies (1999--2023). 
+    This component captures the dominant mode of interannual climate variability.}
+    \label{fig:aci_pca}
+\end{figure}
 
-The time series of the selected PCs is embedded into this quantum space to produce kernel matrices representing nonlinear similarities among temporal observations. These kernel-derived features are then input into an LSTM network, which captures the temporal dynamics and sequential dependencies of the climate anomaly data.
 
-The QK-LSTM model leverages the combined strengths of quantum-enhanced feature representations and the powerful sequence modeling capabilities of LSTM networks to improve forecast accuracy. The predicted future PC values are then used to reconstruct the climate anomaly patterns through the PCA loadings, allowing a comprehensive forecast of the ACI.
 
-\textbf{Strength of LSTM:}  
-LSTM neural networks are designed to model complex, nonlinear temporal dependencies by maintaining gated memory cells that control information flow over long sequences. This makes them particularly well-suited for capturing the dynamic and potentially non-stationary behavior of climate indices such as the ACI.
+We also apply a GLm to to the first principal component (PC1) to generate monthly values, 
+which are then used to forecast future climate anomalies using Long Short-Term Memory (LSTM) networks.
+\subsection{Forecasting with Long Short-Term Memory (LSTM) Networks}
+To generate monthly values for the first principal component (PC1) of the ACI, we employ a Generalized Linear Model (GLM). 
+The GLM is trained on available annual or aggregated data and leverages relevant covariates to estimate monthly PC1 scores, 
+effectively downscaling the index to a finer temporal resolution. This approach enables more granular monitoring and forecasting of climate anomalies.
 
-\begin{table}[H]
-\centering
-\renewcommand{\arraystretch}{1}
-\setlength{\tabcolsep}{15pt}
-\begin{tabular}{ll}
-\hline
-\textbf{Step} & \textbf{Description} \\
-\hline
-1. Data Preparation & Standardize and structure PC time series into input/output sequences \\
-2. Quantum Kernel Embedding & Apply quantum feature mapping and compute kernel matrices \\
-3. Model Initialization & Define LSTM architecture (layers, units, activation functions) \\
-4. Training & Fit the QK-LSTM model to historical PC data using backpropagation \\
-5. Validation & Evaluate model performance on a hold-out validation set \\
-6. Forecasting & Generate future PC predictions using the trained QK-LSTM \\
-7. Reconstruction & Combine predicted PCs with loadings to reconstruct climate anomalies \\
-8. Uncertainty Estimation & (Optional) Use dropout or ensemble methods for predictive intervals \\
-\hline
-\end{tabular}
-\caption{Algorithm for QK-LSTM-based ACI Forecasting}
-\label{tab:lstm_algorithm}
-\end{table}
+Once the monthly PC1 series is constructed, we utilize a Long Short-Term Memory (LSTM) neural network to forecast future values. 
+LSTM networks are a type of recurrent neural network (RNN) well-suited for modeling sequential data with temporal dependencies, 
+making them ideal for time series forecasting in climate applications.
 
-This hybrid QK-LSTM framework provides a promising, data-driven approach to forecasting the ACI, capturing nonlinearities and temporal patterns beyond traditional linear models and purely classical neural networks. It advances the predictive capabilities required for actuarial climate risk assessment and planning.
+\subsubsection*{Workflow Overview}
+The process can be summarized as follows:
+\begin{enumerate}
+    \item \textbf{GLM Downscaling:} Fit a GLM to generate monthly PC1 ACI points from annual or aggregated data.
+    \item \textbf{LSTM Forecasting:} Train an LSTM model on the monthly PC1 series to predict future climate anomaly trends.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{aci_glm_lstm_workflow.png}
+    \caption{Workflow for generating and forecasting monthly PC1 ACI values using GLM and LSTM.}
+    \label{fig:aci_glm_lstm_workflow}
+\end{figure}
+
+\subsubsection*{Explanation}
+In simple terms, the GLM helps us estimate monthly climate index values from coarser data, while the LSTM learns patterns in these monthly values to make forecasts. 
+This combined approach allows us to both reconstruct and predict climate anomalies at a monthly scale, which is valuable for actuarial risk assessment and planning.
 
 \section{Technical Methods}
-This section details the statistical and computational techniques used, including data standardization, PCA, sensitivity analysis, bootstrapping, and Bayesian time series modeling.
+This section details the statistical and computational techniques used, including data standardization, PCA, sensitivity analysis, bootstrapping, 
+and Bayesian time series modeling.
 
 \section{Integration with Actuarial Risk Assessment}
-The ACI is intended as a compact, multivariate indicator of climate anomalies relevant for insurance and risk management. Future work will focus on integrating the index with loss data models to evaluate its predictive power in actuarial contexts, including claims frequency and severity associated with extreme climate events.
+The ACI is intended as a compact, multivariate indicator of climate anomalies relevant for insurance and risk management. 
+Future work will focus on integrating the index with loss data models to evaluate its predictive power in actuarial contexts, 
+including claims frequency and severity associated with extreme climate events.
 
 \chapter{Results}
 \section{Findings}
